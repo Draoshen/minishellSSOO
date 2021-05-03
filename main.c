@@ -29,6 +29,8 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <errno.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
 
 extern int obtain_order();		/* See parser.y for description */
@@ -124,6 +126,38 @@ int main(void)
 			}
 		}
 
+
+		else if (filev[1])
+		{
+			//printf("vamos a tener que crear el archivo,%s\n",filev[1] );
+			int fichSalidaEstandar = open(filev[1], O_WRONLY|O_CREAT|O_TRUNC, 0666);
+			int pid;
+			int status;
+			switch(pid=fork()){
+				case -1:
+				perror("Error en la llamada al fork");
+				break;
+				//código del hijo
+				case 0:
+					//printf("Hola soy el hijo\n");
+					//sleep(1);
+
+					close(1);
+					dup(fichSalidaEstandar);
+					execvp(argv[0],&argv[0]);
+					perror("Error en el exec");
+				break;
+				//código del padre
+				default:
+					//printf("Estamos esperando a que el hijo haga sus cositas\n");
+					pid=wait(&status);
+					if ( WIFEXITED(status) ){
+						int exit_status = WEXITSTATUS(status);        
+        				//printf("Exit status of the child was %d\n",exit_status);
+					}
+					//printf("He terminado con la tarea\n");
+			}
+		}
 		//Mandatos no reconocidos y que por tanto son externos
 		else{
 			int pid;
@@ -135,7 +169,7 @@ int main(void)
 				//código del hijo
 				case 0:
 					//printf("Hola soy el hijo\n");
-					sleep(1);
+					//sleep(1);
 					execvp(argv[0],&argv[0]);
 					perror("Error en el exec");
 				break;
