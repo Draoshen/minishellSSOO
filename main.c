@@ -59,7 +59,7 @@ int main(void)
 	//Funcion que va a analizar las distintas tareas que tenga que hacer
 /*	void functionName(ParameterList)
 {
-	//Statement
+	//Statement 
 	    
 }
 */
@@ -107,15 +107,20 @@ int main(void)
 		{
 				exit(0);
 		}
-
 		if (strstr(argv[0],"cd"))
-		{
+		{	
+			char cwd[2048];
 			if (argv[1]!=NULL)
-			{
+			{	
+
 				chdir(argv[1]);
+				getcwd(cwd, sizeof(cwd));
+				printf("%s\n",cwd );
 			}
 			else{
 				chdir(getenv("HOME"));
+				getcwd(cwd, sizeof(cwd));
+				printf("%s\n",cwd );
 			}
 		}
 
