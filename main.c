@@ -87,7 +87,7 @@ int main(void)
 			numArgs[argvc]=numArgs[argvc]++;
 			//printf("\n");
 		}
-	if (filev[0]) printf("< %s\n", filev[0]);/* IN */
+	//if (filev[0]) printf("< %s\n", filev[0]);/* IN */
 	//if (filev[1]) printf("> %s\n", filev[1]);/* OUT */
 	if (filev[2]) printf(">& %s\n", filev[2]);/* ERR */
 	if (bg) {
@@ -130,13 +130,75 @@ int main(void)
 		{
 			/* code */
 			printf("He entrado aqui y soy el umask\n");
+			if (argv[1])
+			{
+				/* code */
+			}
 			printf("Voy a cambiar los permisos a: %s\n",argv[1]);
+
+		}
+		else if (filev[0])
+		{
+			//printf("Ahora toca hacer la redirección, con entrada estándar\n");
+			int fichEntradaEstandar = open(filev[0], O_RDONLY);
+			//printf("Este es el descriptor de fichero%d\n",fichEntradaEstandar );
+			if (fichEntradaEstandar<0)
+			{
+				perror("fallo en el open");
+				exit(1);
+			}
+			
+
+			//Ya tenemos todo lo que queremos para hacer el fork
+			int pid;
+			int status;
+			switch(pid=fork()){
+				case -1:
+				perror("Error en la llamada al fork");
+				break;
+				//código del hijo
+				case 0:
+					//printf("Hola soy el hijo\n");
+					//sleep(1);
+				close(0);
+				dup(fichEntradaEstandar);
+				//printf("%s",buffer );
+				close(fichEntradaEstandar);
+					execvp(argv[0],&argv[0]);
+					perror("Error en el exec");
+					exit(1);
+				break;
+				//código del padre
+				default:
+				if (bg)
+				{
+					//no hacemos la espera al ser en background
+				}
+				else {
+					//printf("Estamos esperando a que el hijo haga sus cositas\n");
+					pid=wait(&status);
+					if ( WIFEXITED(status) ){
+						int exit_status = WEXITSTATUS(status);
+						 if (exit_status)
+						        {
+						        	/* code */
+						        }       
+        				//printf("Exit status of the child was %d\n",exit_status);
+					}
+					//printf("He terminado con la tarea\n");
+				}
+			}
 		}
 
 		else if (filev[1])
 		{
 			//printf("vamos a tener que crear el archivo,%s\n",filev[1] );
 			int fichSalidaEstandar = open(filev[1], O_WRONLY|O_CREAT|O_TRUNC, 0666);
+			if (fichSalidaEstandar<0)
+			{
+				perror("fallo en el open");
+				exit(1);
+			}
 			int pid;
 			int status;
 			switch(pid=fork()){
@@ -152,6 +214,7 @@ int main(void)
 					dup(fichSalidaEstandar);
 					execvp(argv[0],&argv[0]);
 					perror("Error en el exec");
+					exit(1);
 				break;
 				//código del padre
 				default:
@@ -163,7 +226,11 @@ int main(void)
 					//printf("Estamos esperando a que el hijo haga sus cositas\n");
 					pid=wait(&status);
 					if ( WIFEXITED(status) ){
-						int exit_status = WEXITSTATUS(status);        
+						int exit_status = WEXITSTATUS(status);
+						if (exit_status)
+						    {
+						    	/* code */
+						    }    
         				//printf("Exit status of the child was %d\n",exit_status);
 					}
 					//printf("He terminado con la tarea\n");
@@ -184,6 +251,7 @@ int main(void)
 					//sleep(1);
 					execvp(argv[0],&argv[0]);
 					perror("Error en el exec");
+					exit(1);
 				break;
 				//código del padre
 				default:
@@ -195,7 +263,11 @@ int main(void)
 					//printf("Estamos esperando a que el hijo haga sus cositas\n");
 					pid=wait(&status);
 					if ( WIFEXITED(status) ){
-						int exit_status = WEXITSTATUS(status);        
+						int exit_status = WEXITSTATUS(status);
+						if (exit_status)
+						     {
+						     	/* code */
+						     }     
         				//printf("Exit status of the child was %d\n",exit_status);
 					}
 					//printf("He terminado con la tarea\n");
