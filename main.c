@@ -88,11 +88,11 @@ int main(void)
 			//printf("\n");
 		}
 	if (filev[0]) printf("< %s\n", filev[0]);/* IN */
-	if (filev[1]) printf("> %s\n", filev[1]);/* OUT */
+	//if (filev[1]) printf("> %s\n", filev[1]);/* OUT */
 	if (filev[2]) printf(">& %s\n", filev[2]);/* ERR */
 	if (bg) {
-		printf("&\n");
-		printf("El programa se ejecuta en background\n");
+		//printf("&\n");
+		//printf("El programa se ejecuta en background\n");
 	}
 	//printf("Los valores de argvc:%d,argc:%d\n",argvc,argc );
 
@@ -126,6 +126,12 @@ int main(void)
 			}
 		}
 
+		else if (strstr(argv[0],"umask"))
+		{
+			/* code */
+			printf("He entrado aqui y soy el umask\n");
+			printf("Voy a cambiar los permisos a: %s\n",argv[1]);
+		}
 
 		else if (filev[1])
 		{
@@ -149,6 +155,11 @@ int main(void)
 				break;
 				//código del padre
 				default:
+				if (bg)
+				{
+					//no hacemos la espera al ser en background
+				}
+				else {
 					//printf("Estamos esperando a que el hijo haga sus cositas\n");
 					pid=wait(&status);
 					if ( WIFEXITED(status) ){
@@ -156,6 +167,7 @@ int main(void)
         				//printf("Exit status of the child was %d\n",exit_status);
 					}
 					//printf("He terminado con la tarea\n");
+				}
 			}
 		}
 		//Mandatos no reconocidos y que por tanto son externos
@@ -175,6 +187,11 @@ int main(void)
 				break;
 				//código del padre
 				default:
+				if (bg)
+				{
+					//no hacemos la espera al ser en background
+				}
+				else {
 					//printf("Estamos esperando a que el hijo haga sus cositas\n");
 					pid=wait(&status);
 					if ( WIFEXITED(status) ){
@@ -182,6 +199,7 @@ int main(void)
         				//printf("Exit status of the child was %d\n",exit_status);
 					}
 					//printf("He terminado con la tarea\n");
+				}
 			}
 		}
 		

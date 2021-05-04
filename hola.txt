@@ -1,15 +1,1 @@
-total 176
-drwx------ 3 rafa rafa  4096 may  3 21:46 .
-drwx------ 3 rafa rafa  4096 feb 10 16:43 ..
-drwxrwxr-x 8 rafa rafa  4096 may  3 18:04 .git
--rw-rw-r-- 1 rafa rafa     0 may  3 21:46 hola.txt
--rw------- 1 rafa rafa  2741 jul 11  2019 LICENCIA
--rw------- 1 rafa rafa  4816 may  3 21:45 main.c
--rw-rw-r-- 1 rafa rafa 13440 may  3 21:45 main.o
--rw------- 1 rafa rafa   947 ene 24  2020 Makefile
--rwxrwxr-x 1 rafa rafa 56824 may  3 21:45 msh
--rw-rw-r-- 1 rafa rafa 21144 may  2 10:21 parser.o
--rw------- 1 rafa rafa  2979 jul 11  2019 parser.y
--rw------- 1 rafa rafa  1177 jul 11  2019 scanner.l
--rw-rw-r-- 1 rafa rafa 39352 may  2 10:23 scanner.o
--rw-rw-r-- 1 rafa rafa  2683 may  2 10:21 y.tab.h
+
