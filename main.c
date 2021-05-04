@@ -45,7 +45,7 @@ int main(void)
 	int bg;
 	int ret;
 	//voy a guardar la cantidad de argumentos para cada mandato
-	int numArgs[200]; //no creo que me vayan a pasar más de 200 mandatos de una tirada y de ser así GG!
+	//int numArgs[200]; //no creo que me vayan a pasar más de 200 mandatos de una tirada y de ser así GG!
 
 
 
@@ -84,12 +84,12 @@ int main(void)
 	for (argvc = 0; (argv = argvv[argvc]); argvc++) {
 		for (argc = 0; argv[argc]; argc++){}
 				//printf("El argumento %d , es : %s \n", argc,argv[argc]);
-			numArgs[argvc]=numArgs[argvc]++;
+			//numArgs[argvc]=numArgs[argvc]++;
 			//printf("\n");
 		}
 	//if (filev[0]) printf("< %s\n", filev[0]);/* IN */
 	//if (filev[1]) printf("> %s\n", filev[1]);/* OUT */
-	if (filev[2]) printf(">& %s\n", filev[2]);/* ERR */
+	//if (filev[2]) printf(">& %s\n", filev[2]);/* ERR */
 	if (bg) {
 		//printf("&\n");
 		//printf("El programa se ejecuta en background\n");
@@ -97,8 +97,14 @@ int main(void)
 	//printf("Los valores de argvc:%d,argc:%d\n",argvc,argc );
 
 	if (argvc>1)
-	{
-		//printf("nos va a tocar pringar las manos\n");
+	{	
+		printf("Ahora toca lo bueno hombre\n");
+		printf("%d\n",argvc );
+		for (int i = 0; i < argvc; ++i)
+		{	
+			argv=argvv[i];
+			printf("vamos a tener que hacer un fork para los siguientes mandatos %s, %s\n",argv[0],argv[1]);
+		}
 	}
 	else{
 		//printf("nos ha tocado lo fácil\n");
@@ -237,6 +243,54 @@ int main(void)
 				}
 			}
 		}
+
+		else if (filev[2])
+		{
+			//printf("vamos a tener que crear el archivo,%s\n",filev[1] );
+			int fichErrorEstandar = open(filev[2], O_WRONLY|O_CREAT|O_TRUNC, 0666);
+			if (fichErrorEstandar<0)
+			{
+				perror("fallo en el open");
+				exit(1);
+			}
+			int pid;
+			int status;
+			switch(pid=fork()){
+				case -1:
+				perror("Error en la llamada al fork");
+				break;
+				//código del hijo
+				case 0:
+					//printf("Hola soy el hijo\n");
+					//sleep(1);
+
+					close(2);
+					dup(fichErrorEstandar);
+					execvp(argv[0],&argv[0]);
+					perror("Error en el exec");
+					exit(1);
+				break;
+				//código del padre
+				default:
+				if (bg)
+				{
+					//no hacemos la espera al ser en background
+				}
+				else {
+					//printf("Estamos esperando a que el hijo haga sus cositas\n");
+					pid=wait(&status);
+					if ( WIFEXITED(status) ){
+						int exit_status = WEXITSTATUS(status);
+						if (exit_status)
+						    {
+						    	/* code */
+						    }    
+        				//printf("Exit status of the child was %d\n",exit_status);
+					}
+					//printf("He terminado con la tarea\n");
+				}
+			}
+		}
 		//Mandatos no reconocidos y que por tanto son externos
 		else{
 			int pid;
@@ -279,7 +333,7 @@ int main(void)
 	}
 	//printf("%s\n",*argvv[1] );
 /*
- * FIN DE LA PARTE A ELIMINAR
+ * FIN DE LA PARTE A ELIMINAR updated >&
  */
 #endif
 	}

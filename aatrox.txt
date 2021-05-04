@@ -1,1 +1,1 @@
-hola me llamo sergio
+cat: fichnoexiste.txt: No such file or directory
