@@ -1,2 +1,1 @@
-cat: fichnoexiste.txt: No such file or directory
-Esto es un prueba que he estado haciendo para que el gitHub no me vaya pidiendo todo el rato las credenciales
+cat: aatrox3.txt: No such file or directory

@@ -98,13 +98,7 @@ int main(void)
 
 	if (argvc>1)
 	{	
-		printf("Ahora toca lo bueno hombre\n");
-		printf("%d\n",argvc );
-		for (int i = 0; i < argvc; ++i)
-		{	
-			argv=argvv[i];
-			printf("vamos a tener que hacer un fork para los siguientes mandatos %s, %s\n",argv[0],argv[1]);
-		}
+		
 	}
 	else{
 		//printf("nos ha tocado lo fácil\n");
@@ -333,7 +327,7 @@ int main(void)
 	}
 	//printf("%s\n",*argvv[1] );
 /*
- * FIN DE LA PARTE A ELIMINAR updated >&
+ * FIN DE LA PARTE A ELIMINAR updated >& TRY 2
  */
 #endif
 	}
